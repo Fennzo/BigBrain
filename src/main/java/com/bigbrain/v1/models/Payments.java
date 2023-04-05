@@ -15,7 +15,7 @@ public class Payments {
 	private int paymentIDPK;
 	private int billIDFK;
 
-	private float creditCardNumber;
+	private String creditCardNumber;
 
 	private int CVV;
 
@@ -34,7 +34,7 @@ public class Payments {
 		this.billIDFK = billIDFK;
 		this.userIdFk = userIdFk;
 	}
-	public Payments(int billIDFK, float creditCardNumber, int CVV, int expirationMonth, int expirationYear, long amountPaid, int userIdFk) {
+	public Payments(int billIDFK, String creditCardNumber, int CVV, int expirationMonth, int expirationYear, long amountPaid, int userIdFk) {
 		this.billIDFK = billIDFK;
 		this.creditCardNumber = creditCardNumber;
 		this.CVV = CVV;
@@ -44,12 +44,52 @@ public class Payments {
 		this.userIdFk = userIdFk;
 	}
 
+	public int getPaymentIDPK() {
+		return paymentIDPK;
+	}
+
+	public void setPaymentIDPK(int paymentIDPK) {
+		this.paymentIDPK = paymentIDPK;
+	}
+
 	public int getBillIDFK() {
 		return billIDFK;
 	}
 
 	public void setBillIDFK(int billIDFK) {
 		this.billIDFK = billIDFK;
+	}
+
+	public String getCreditCardNumber() {
+		return creditCardNumber;
+	}
+
+	public void setCreditCardNumber(String creditCardNumber) {
+		this.creditCardNumber = creditCardNumber;
+	}
+
+	public int getCVV() {
+		return CVV;
+	}
+
+	public void setCVV(int CVV) {
+		this.CVV = CVV;
+	}
+
+	public int getExpirationMonth() {
+		return expirationMonth;
+	}
+
+	public void setExpirationMonth(int expirationMonth) {
+		this.expirationMonth = expirationMonth;
+	}
+
+	public int getExpirationYear() {
+		return expirationYear;
+	}
+
+	public void setExpirationYear(int expirationYear) {
+		this.expirationYear = expirationYear;
 	}
 
 	public long getAmountPaid() {
@@ -64,6 +104,9 @@ public class Payments {
 		return paymentDate;
 	}
 
+	public void setPaymentDate(Date paymentDate) {
+		this.paymentDate = paymentDate;
+	}
 
 	public int getUserIdFk() {
 		return userIdFk;
@@ -73,37 +116,6 @@ public class Payments {
 		this.userIdFk = userIdFk;
 	}
 
-	public int getPaymentIDPK() {
-		return paymentIDPK;
-	}
-	public void setPaymentIDPK(int paymentIDPK) {
-		this.paymentIDPK = paymentIDPK;
-	}
-	public float getCreditCardNumber() {
-		return creditCardNumber;
-	}
-	public void setCreditCardNumber(float creditCardNumber) {
-		this.creditCardNumber = creditCardNumber;
-	}
-	public int getCVV() {
-		return CVV;
-	}
-	public void setCVV(int cVV) {
-		CVV = cVV;
-	}
-	public int getExpirationMonth() {
-		return expirationMonth;
-	}
-	public void setExpirationMonth(int expirationMonth) {
-		this.expirationMonth = expirationMonth;
-	}
-	public int getExpirationYear() {
-		return expirationYear;
-	}
-	public void setExpirationYear(int expirationYear) {
-		this.expirationYear = expirationYear;
-	}
-	
 	@Override
 	public String toString() {
 		return "Payments [paymentIDPK=" + paymentIDPK + ", creditCardNumber=" + creditCardNumber + ", CVV=" + CVV

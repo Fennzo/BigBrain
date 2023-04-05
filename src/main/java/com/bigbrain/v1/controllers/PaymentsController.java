@@ -29,7 +29,15 @@ public class PaymentsController {
         return "paymentform";
     }
     @PostMapping("/user/userbills/{billidfk}/payment")
-        public void submitPayment(@ModelAttribute("newPayment") Payments newPayment){
+    public String submitPayment(@ModelAttribute("newPayment") Payments newPayment, HttpSession session){
+        Users user = (Users) session.getAttribute("user");
+        newPayment.setUserIdFk(user.getUserIdPK());
+        System.out.println("NEW PAYMENT" + newPayment);
         paymentRepository.save(newPayment);
+        if ("Manager".equals(user.getRole())){
+            return "redirect:/admin/allbills";
+        }else {
+            return "redirect:/user/userbills";
+        }
     }
 }

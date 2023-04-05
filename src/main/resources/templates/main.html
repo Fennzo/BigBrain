@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -32,7 +32,7 @@
     <div class="layui-side layui-bg-black custom-admin">
         <div class="layui-side-scroll">
             <div class="custom-logo">
-                <h1>MobileHOA</h1>
+                <h1>Community Betterment</h1>
             </div>
 
             <ul id="nav" class="layui-nav layui-nav-tree"  lay-filter="test">
@@ -42,14 +42,20 @@
                         <em>Welcome</em>
                     </a>
                 </li>
-                <li class="layui-nav-item">
+                <li class="layui-nav-item" >
                     <a href="/admin/alluserrequests">
                         <i class="layui-icon">&#xe857;</i>
                         <em>Requests</em>
                     </a>
                 </li>
-                <li class="layui-nav-item">
+                <li class="layui-nav-item"  sec:authorize="hasAnyAuthority('Manager')">
                     <a href="/admin/allbills">
+                        <i class="layui-icon">&#xe857;</i>
+                        <em>Bills</em>
+                    </a>
+                </li>
+                <li class="layui-nav-item"  sec:authorize="hasAnyAuthority('Maintenance', 'Homeowner')">
+                    <a href="/user/userbills">
                         <i class="layui-icon">&#xe857;</i>
                         <em>Bills</em>
                     </a>
@@ -58,6 +64,12 @@
                     <a href="/incidentmap">
                         <i class="layui-icon">&#xe857;</i>
                         <em>Incidents</em>
+                    </a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="/admin/allannouncements">
+                        <i class="layui-icon">&#xe857;</i>
+                        <em>Announcement</em>
                     </a>
                 </li>
                 <li class="layui-nav-item">

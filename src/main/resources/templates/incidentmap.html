@@ -40,56 +40,64 @@
             let marked
         </script>
 
+        <hr>
+
         <div th:if="${ not#lists.isEmpty(allIncidents)}">
-            <table class="layui-table">
-                <tr>
-                    <th>Label</th>
-                    <th>Incident category</th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                </tr>
-                <tr th:each="incident : ${allIncidents}">
-
-                    <script>
-                        markers.push({
-                            incidentIDPK: [[${incident.incidentIDPK}]],
-                            latitude: [[${incident.latitude}]],
-                            longitude: [[${incident.longitude}]],
-                            title: "[[${incident.title}]]",
-                            description: "[[${incident.description}]]"
-                        });
-                        marker = markers[markers.length-1]
-                        console.log(marker);
-                        marked = new google.maps.Marker({
-                            position: {lat: marker.latitude, lng: marker.longitude},
-                            map: map,
-                            label: {
-                                color: '#000',
-                                fontSize: '12px',
-                                fontWeight: '600',
-                                text: marker.incidentIDPK.toString()
-                            }
-                        });
-
-
-                        marked.addListener('click', function() {
-                            let infowindow = new google.maps.InfoWindow({
-                                content: marker.title + '\n' + marker.description
+            <table class="layui-table" id="data-table">
+                <thead>
+                    <tr>
+                        <th>Label</th>
+                        <th>Incident category</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Image</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="incident, stat : ${allIncidents}">
+                        <td th:text="${incident.incidentIDPK}"></td>
+                        <td th:text="${incident.category}"></td>
+                        <td th:text="${incident.title}"></td>
+                        <td th:text="${incident.description}"></td>
+                        <td th:text="${incident.status}"></td>
+                        <td th:text="${incident.incidentDate}"></td>
+                        <td>
+                            <img th:src="${'data:image/png;base64,' + imageList.get(stat.index)}" width="120px" alt="">
+                        </td>
+                        <script>
+                            markers.push({
+                                incidentIDPK: [[${incident.incidentIDPK}]],
+                                latitude: [[${incident.latitude}]],
+                                longitude: [[${incident.longitude}]],
+                                title: "Title: [[${incident.title}]]<br>",
+                                description: "Description: [[${incident.description}]]<br>"
                             });
-                            infowindow.open(map, marked);
-                        });
+                            marker = markers[markers.length-1]
+                            console.log(marker);
+                            marked = new google.maps.Marker({
+                                position: {lat: marker.latitude, lng: marker.longitude},
+                                map: map,
+                                label: {
+                                    color: '#000',
+                                    fontSize: '12px',
+                                    fontWeight: '600',
+                                    text: marker.incidentIDPK.toString()
+                                }
+                            });
 
-                    </script>
 
-                    <td th:text="${incident.incidentIDPK}"></td>
-                    <td th:text="${incident.category}"></td>
-                    <td th:text="${incident.title}"></td>
-                    <td th:text="${incident.description}"></td>
-                    <td th:text="${incident.status}"></td>
-                    <td th:text="${incident.incidentDate}"></td>
-                </tr>
+                            marked.addListener('click', function() {
+                                let infowindow = new google.maps.InfoWindow({
+                                    content: marker.title + '\n' + marker.description
+                                });
+                                infowindow.open(map, marked);
+                            });
+
+                        </script>
+                    </tr>
+                </tbody>
             </table>
         </div>
         <div class="flex-box">
@@ -102,6 +110,50 @@
         <a class="layui-btn layui-btn-sm" th:href="@{/user/incidents}">My incidents</a>
     </div>
 </div>
+
+<script type="text/javascript" th:inline="javascript">
+
+
+    layui.use('table', function () {
+        var table = layui.table
+        let dataList = []
+        $('#data-table tbody>tr').each((index, item) => {
+            dataList.push({
+                incidentIDPK: item.querySelector('td:nth-child(1)').innerText,
+                category: item.querySelector('td:nth-child(2)').innerText,
+                title: item.querySelector('td:nth-child(3)').innerText,
+                description: item.querySelector('td:nth-child(4)').innerText,
+                status: item.querySelector('td:nth-child(5)').innerText,
+                incidentDate: item.querySelector('td:nth-child(6)').innerText,
+                image: item.querySelector('td:nth-child(7)>img').src,
+            })
+        })
+
+        $('#data-table').html('')
+        table.render({
+            elem: '#data-table'
+            , cols: [
+                [
+                    {field: 'incidentIDPK', title: 'Label', sort: true}
+                    , {field: 'category', title: 'Incident category', sort: true}
+                    , {field: 'title', title: 'Title', sort: true}
+                    , {field: 'description', title: 'Description', sort: true}
+                    , {field: 'status', title: 'Status', sort: true}
+                    , {field: 'incidentDate', title: 'Date', sort: true}
+                    , {field: 'image', title: 'Image', templet: function (row){
+                        return ` <img src="${row.image}" width="120px" alt="">`
+                    }}
+                ]
+            ],
+            data: dataList
+        });
+
+    })
+
+
+</script>
+
+
 
 </body>
 </html>

@@ -18,34 +18,91 @@
   </div>
   <div class="layui-card-body">
     <div th:if="${ not#lists.isEmpty(allUserRequests)}">
-      <table class="layui-table">
-        <tr>
-          <th>Title</th>
-          <th>Description</th>
-          <th>Priority</th>
-          <th>Status</th>
-          <th>Request date</th>
-          <th>Assigned Maintenance</th>
-        </tr>
-        <tr th:each="request : ${allUserRequests}">
-          <td th:text="${request.title}"></td>
-          <td th:text="${request.description}"></td>
-          <td th:text="${request.priority}"></td>
-          <td th:text="${request.status}"></td>
-          <td th:text="${request.requestDate}"></td>
-          <td>
-            <a class="layui-btn layui-btn-sm layui-btn-danger" th:href="@{/admin/deleterequest/{requestIDPK}(requestIDPK=${request.requestIDPK})}">
-              Delete
-            </a>
-            <a class="layui-btn layui-btn-sm" th:href="@{/admin/updaterequest/{requestIDPK}(requestIDPK=${request.requestIDPK})}">
-              Edit
-            </a>
-        </tr>
+      <table class="layui-table" id="data-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Request date</th>
+            <th>Assigned Maintenance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="request : ${allUserRequests}">
+            <td th:text="${request.title}"></td>
+            <td th:text="${request.description}"></td>
+            <td th:text="${request.priority}"></td>
+            <td th:text="${request.status}"></td>
+            <td th:text="${request.requestDate}"></td>
+            <td th:data-id="${request.requestIDPK}">
+              <a class="layui-btn layui-btn-sm layui-btn-danger" onclick="return confirm('Are you sure to delete?')" th:href="@{/deleterequest/{requestIDPK}(requestIDPK=${request.requestIDPK})}">
+                Delete
+              </a>
+              <a class="layui-btn layui-btn-sm" th:href="@{/updaterequest/{requestIDPK}(requestIDPK=${request.requestIDPK})}">
+                Edit
+              </a>
+            <td>
+          </tr>
+        </tbody>
       </table>
     </div>
     <a class="layui-btn layui-btn-sm" th:href="@{/user/requestform}">New request</a>
   </div>
 </div>
+
+
+<script type="text/javascript" th:inline="javascript">
+
+
+  layui.use('table', function () {
+    var table = layui.table
+    let dataList = []
+    $('#data-table tbody>tr').each((index, item) => {
+      dataList.push({
+        requestIDPK: item.querySelector('td:nth-child(6)').getAttribute('data-id'),
+        title: item.querySelector('td:nth-child(1)').innerText,
+        description: item.querySelector('td:nth-child(2)').innerText,
+        priority: item.querySelector('td:nth-child(3)').innerText,
+        status: item.querySelector('td:nth-child(4)').innerText,
+        requestDate: item.querySelector('td:nth-child(5)').innerText
+      })
+    })
+
+    $('#data-table').html('')
+    table.render({
+      elem: '#data-table'
+      , cols: [
+        [
+          {field: 'title', title: 'Title', sort: true}
+          , {field: 'description', title: 'Description', sort: true}
+          , {field: 'priority', title: 'Priority', sort: true}
+          , {field: 'status', title: 'Status', sort: true}
+          , {field: 'requestDate', title: 'Request date', sort: true}
+          , {
+              title: 'Assigned Maintenance', templet: function (row){
+                return `
+                    <a class="layui-btn layui-btn-sm layui-btn-danger" onclick="return confirm('Are you sure to delete?')" href="/deleterequest/${row.requestIDPK}">
+                      Delete
+                    </a>
+                    <a class="layui-btn layui-btn-sm" href="/updaterequest/${row.requestIDPK}">
+                      Edit
+                    </a>
+                `
+              }
+            }
+        ]
+      ],
+      data: dataList
+    });
+
+  })
+
+
+
+</script>
+
 
 </body>
 </html>

@@ -10,6 +10,7 @@ import com.bigbrain.v1.DAOandRepositories.RequestRepository;
 import com.bigbrain.v1.DAOandRepositories.UsersRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.Banner;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -60,9 +61,15 @@ public class RequestController {
         return "redirect:/welcome";
     }
 
-    @GetMapping("/admin/alluserrequests")
-    public String showAllUserRequests(HttpSession httpSession, Model model){
+    @GetMapping("/user/userrequests")
+    public String showUserRequests(HttpSession httpSession, Model model){
         Users user = (Users) httpSession.getAttribute("user");
+        List<Requests> userRequests = requestRepository.findAllByUserIdFk(user.getUserIdPK());
+        model.addAttribute("userRequests", userRequests);
+        return "userrequests";
+    }
+    @GetMapping("/admin/alluserrequests")
+    public String showAllUserRequests(Model model){
         List<Requests> allUserRequests = requestRepository.findAll();
        // System.out.println("allrequests: " + allUserRequests.toString());
         model.addAttribute("allUserRequests", allUserRequests);

@@ -67,8 +67,8 @@ public class LoginController {
 
         registerUserRoleWithSpringSecurity(SecurityContextHolder.getContext().getAuthentication(), user);
         //feed announcement to welcome
-        List<Announcements> allAnnouncements = announcementRepository.findAll();
-        model.addAttribute("allAnnouncements", allAnnouncements);
+        Announcements latestAnnouncement = announcementRepository.findLatest();
+        model.addAttribute("latestAnnouncement", latestAnnouncement);
         return "welcome";
     }
 
@@ -89,9 +89,9 @@ public class LoginController {
         model.addAttribute("user", user);
         addressRepository.save(newAddress);
         registerUserRoleWithSpringSecurity(SecurityContextHolder.getContext().getAuthentication(), user);
-        List<Announcements> allAnnouncements = announcementRepository.findAll();
-        model.addAttribute("allAnnouncements", allAnnouncements);
-        return "welcome";
+        Announcements latestAnnouncement = announcementRepository.findLatest();
+        model.addAttribute("latestAnnouncement", latestAnnouncement);
+        return "redirect:/backend";
     }
 
 

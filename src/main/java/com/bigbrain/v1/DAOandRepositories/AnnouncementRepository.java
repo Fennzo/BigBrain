@@ -41,7 +41,7 @@ public class AnnouncementRepository implements AnnouncementDao{
 
     @Override
     public int update(Announcements announcement, int announcementIDPK) {
-        return jdbc.update("UPDATE Announcements SET Severity=?, title=?, Description=? WHERE announcementIDPK=? ",
+        return jdbc.update("UPDATE Announcements SET Severity=?, Title=?, Description=? WHERE AnnouncementIdPK=? ",
                 announcement.getSeverity(), announcement.getTitle(), announcement.getDescription(),
                 announcementIDPK);
     }

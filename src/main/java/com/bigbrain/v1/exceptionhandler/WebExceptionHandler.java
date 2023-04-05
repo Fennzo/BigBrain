@@ -53,8 +53,8 @@ public class WebExceptionHandler extends ResponseEntityExceptionHandler {
 
     /*
     Handling DataIntegrityViolationException with different error messages and HTTP status codes based on the type of constraint violation.
-    If the constraint name starts with "CHK_", it returns a message that indicates a check constraint violation, with a status code of 409 Conflict.
-    If the constraint name starts with "TRG_", it returns a message that indicates a trigger error, also with a status code of 409 Conflict.
+    If the constraint name contains "_check", it returns a message that indicates a check constraint violation, with a status code of 409 Conflict.
+    If the constraint name contains with "_trigger", it returns a message that indicates a trigger error, also with a status code of 409 Conflict.
     For any other constraint violation, it returns a message with the constraint violation error message and HTTP status code of 409 Conflict.
     If the cause of the exception is not a ConstraintViolationException, it returns a message that indicates a data integrity violation with HTTP status code of 409 Conflict
      */

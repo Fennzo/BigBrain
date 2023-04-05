@@ -26,14 +26,15 @@ public class AppConfig {
 		http
 				.csrf().disable()
 				.authorizeHttpRequests(authorize -> authorize
-						.requestMatchers("/", "/registration").permitAll()  // allows any request to the root URL ("/") and the registration URL ("/registration") without authentication
+						.requestMatchers("/", "/registration", "/css/**", "/fonts/**", "/images/**", "/js/**", "/layui/**").permitAll()  // allows any request to the root URL ("/") and the registration URL ("/registration") without authentication
 						.requestMatchers("/user/**").hasAnyAuthority("Homeowner", "Manager") // only users with homeowner role
 						.requestMatchers("/admin/**").hasAuthority("Manager") // only users with manager role
 						.requestMatchers("/mainteenance/**").hasAnyAuthority("Maintenance")
 						.anyRequest().authenticated()
 				)
 				.oauth2Login()
-				.defaultSuccessUrl("/backend", true);
+				.defaultSuccessUrl("/backend", true)
+				.loginPage("/");
 
 		HeaderWriter headerWriter = new HeaderWriter() {
 			@Override
@@ -46,13 +47,18 @@ public class AppConfig {
 
 		return http.build();
 	}
+
+
 	@Bean
 	public DataSource getDatasource() {
 		DriverManagerDataSource datasource = new DriverManagerDataSource();
 		datasource.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-		datasource.setUrl("jdbc:sqlserver://localhost:1433;database=CapstoneDatabase;encrypt=true;trustServerCertificate=true;integratedSecurity=true");
+		datasource.setUrl("jdbc:sqlserver://localhost:1433;database=CapstoneDatabase (2);encrypt=true;trustServerCertificate=true;integratedSecurity=true");
+	//	datasource.setUrl("jdbc:sqlserver://localhost:1433;database=CapstoneDatabase;encrypt=false");
 //		datasource.setUsername("jyj123");
+	//	datasource.setUsername("sa");
 //		datasource.setPassword("jpoo1234");
+	//	datasource.setPassword("hhy960918");
 		return datasource;
 	}
 

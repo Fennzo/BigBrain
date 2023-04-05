@@ -4,81 +4,84 @@ import java.util.Date;
 
 
 public class Announcements {
-	
-	public enum Severities {
-	       Urgent,
-	       Social,
-	       Informative
-	    } 
 
-	private int announcementIDPK;
-	private int userIDFK;
-	private String severity;
-	private Date announcementDate;
-	private String title;
-	private String description;
+    public enum Severities {
+        Urgent, Social, Informative
+    }
 
-	public Announcements(){
+    private int announcementIDPK;
+    private int userIDFK;
+    private String severity;
+    private Date announcementDate;
+    private String title;
+    private String description;
 
-	}
-	public Announcements(int userIDFK){
-	this.userIDFK = userIDFK;
-	}
-	public Announcements(int userIDFK, String category, String title, String description) {
-		this.userIDFK = userIDFK;
-		this.severity = category;
-		this.title = title;
-		this.description = description;
-	}
+    public Announcements() {
 
-	public int getAnnouncementIDPK() {
-		return announcementIDPK;
-	}
+    }
 
-	public int getUserIDFK() {
-		return userIDFK;
-	}
+    public Announcements(int userIDFK) {
+        this.userIDFK = userIDFK;
+    }
 
-	public void setUserIDFK(int userIDFK) {
-		this.userIDFK = userIDFK;
-	}
+    public Announcements(int userIDFK, String category, String title, String description) {
+        this.userIDFK = userIDFK;
+        this.severity = category;
+        this.title = title;
+        this.description = description;
+    }
 
-	public String getSeverity() {
-		return severity;
-	}
+    public int getAnnouncementIDPK() {
+        return announcementIDPK;
+    }
 
-	public void setSeverity(String category) {
-		this.severity = category;
-	}
+    public int getUserIDFK() {
+        return userIDFK;
+    }
 
-	public Date getAnnouncementDate() {
-		return announcementDate;
-	}
+    public void setUserIDFK(int userIDFK) {
+        this.userIDFK = userIDFK;
+    }
 
-	public void setAnnouncementDate(Date announcementDate) {
-		this.announcementDate = announcementDate;
-	}
+    public void setAnnouncementIDPK(int announcementIDPK) {
+        this.announcementIDPK = announcementIDPK;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public String getSeverity() {
+        return severity;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setSeverity(String category) {
+        this.severity = category;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public Date getAnnouncementDate() {
+        return announcementDate;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setAnnouncementDate(Date announcementDate) {
+        this.announcementDate = announcementDate;
+    }
 
-	@Override
-	public String toString() {
-		return "Announcements [announcementPK=" + announcementIDPK + ", userIDFK=" + userIDFK + ", severity=" + severity
-				+ ", announcementDate=" + announcementDate + ", title=" + title + ", description=" + description + "]";
-	}
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Announcements [announcementPK=" + announcementIDPK + ", userIDFK=" + userIDFK + ", severity=" + severity + ", announcementDate=" + announcementDate + ", title=" + title + ", description=" + description + "]";
+    }
 
 }

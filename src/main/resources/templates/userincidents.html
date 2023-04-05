@@ -18,37 +18,99 @@
     </div>
     <div class="layui-card-body">
         <div th:if="${ not#lists.isEmpty(userIncidents)}">
-            <table class="layui-table">
-                <tr>
-                    <th>Label</th>
-                    <th>Incident category</th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                    <th>Options</th>
-                </tr>
-                <tr th:each="incident : ${userIncidents}">
+            <table class="layui-table" id="data-table">
+                <thead>
+                    <tr>
+                        <th>Label</th>
+                        <th>Incident category</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Image</th>
+                        <th>Options</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="incident, stat : ${userIncidents}">
 
-                    <td th:text="${incident.incidentIDPK}"></td>
-                    <td th:text="${incident.category}"></td>
-                    <td th:text="${incident.title}"></td>
-                    <td th:text="${incident.description}"></td>
-                    <td th:text="${incident.status}"></td>
-                    <td th:text="${incident.incidentDate}"></td>
-                    <td>
-                        <a class="layui-btn layui-btn-sm layui-btn-danger" th:href="@{/user/deleteincidents/{incidentIDPK}(incidentIDPK=${incident.incidentIDPK})}">
-                            Delete
-                        </a>
-                        <a class="layui-btn layui-btn-sm" th:href="@{/user/updateincident/{incidentIDPK}(incidentIDPK=${incident.incidentIDPK})}">
-                            Edit
-                        </a>
-                </tr>
+                        <td th:text="${incident.incidentIDPK}"></td>
+                        <td th:text="${incident.category}"></td>
+                        <td th:text="${incident.title}"></td>
+                        <td th:text="${incident.description}"></td>
+                        <td th:text="${incident.status}"></td>
+                        <td th:text="${incident.incidentDate}"></td>
+                        <td>
+                            <img th:src="${'data:image/png;base64,' + imageList.get(stat.index)}" width="120px" alt="">
+                        </td>
+                        <td>
+                            <a class="layui-btn layui-btn-sm layui-btn-danger"  onclick="return confirm('Are you sure to delete?')" th:href="@{/user/deleteincidents/{incidentIDPK}(incidentIDPK=${incident.incidentIDPK})}">
+                                Delete
+                            </a>
+                            <a class="layui-btn layui-btn-sm" th:href="@{/user/updateincident/{incidentIDPK}(incidentIDPK=${incident.incidentIDPK})}">
+                                Edit
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </div>
         <a class="layui-btn layui-btn-sm" th:href="@{/incidentmap}">Go back</a>
     </div>
 </div>
+
+<script type="text/javascript" th:inline="javascript">
+
+
+    layui.use('table', function () {
+        var table = layui.table
+        let dataList = []
+        $('#data-table tbody>tr').each((index, item) => {
+            dataList.push({
+                incidentIDPK: item.querySelector('td:nth-child(1)').innerText,
+                category: item.querySelector('td:nth-child(2)').innerText,
+                title: item.querySelector('td:nth-child(3)').innerText,
+                description: item.querySelector('td:nth-child(4)').innerText,
+                status: item.querySelector('td:nth-child(5)').innerText,
+                incidentDate: item.querySelector('td:nth-child(6)').innerText,
+                image: item.querySelector('td:nth-child(7)>img').src,
+            })
+        })
+
+        $('#data-table').html('')
+        table.render({
+            elem: '#data-table'
+            , cols: [
+                [
+                    {field: 'incidentIDPK', title: 'Label', sort: true}
+                    , {field: 'category', title: 'Incident category', sort: true}
+                    , {field: 'title', title: 'Title', sort: true}
+                    , {field: 'description', title: 'Description', sort: true}
+                    , {field: 'status', title: 'Status', sort: true}
+                    , {field: 'incidentDate', title: 'Date', sort: true}
+                    , {field: 'image', title: 'Image', templet: function (row){
+                        return ` <img src="${row.image}" width="120px" alt="">`
+                    }}
+                    , {title: 'Options', templet: function (row){
+                        return `
+                            <a class="layui-btn layui-btn-sm layui-btn-danger" onclick="return confirm('Are you sure to delete?')" href="/user/deleteincidents/${row.incidentIDPK}">
+                                Delete
+                            </a>
+                            <a class="layui-btn layui-btn-sm" href="/user/updateincident/${row.incidentIDPK}">
+                                Edit
+                            </a>
+                        `
+                    }}
+                ]
+            ],
+            data: dataList
+        });
+
+    })
+
+
+</script>
+
 
 </body>
 </html>

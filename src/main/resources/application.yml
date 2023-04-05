@@ -5,7 +5,6 @@ logging:
         security:
         web: DEBUG
         org:hibernate: DEBUG
-
 spring:
   security:
     oauth2:
@@ -17,3 +16,7 @@ spring:
             scope:
               - profile
               - email
+  servlet:
+    multipart:
+      max-request-size: 100MB
+      max-file-size: 100MB

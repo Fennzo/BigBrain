@@ -9,6 +9,17 @@
   <link rel="stylesheet" href="/layui/css/layui.css" th:href="@{/layui/css/layui.css}">
   <script src="/layui/layui.js" th:src="@{/layui/layui.js}"></script>
   <script src="/js/jquery.js" th:src="@{/js/jquery.js}"></script>
+  <style>
+    .preview-image{
+      width: 200px;
+      height: auto;
+      margin-top: 10px;
+      display: none;
+    }
+    .preview-image[src]{
+      display: block;
+    }
+  </style>
 </head>
 <body>
 
@@ -17,6 +28,7 @@
     <h3>Incident Form</h3>
   </div>
   <div class="layui-card-body">
+    <span style="color: darkred" th:text="${param.msg}"></span>
     <form action="#" class="layui-form" th:action="@{/user/updateincident}" method="post">
       <input type="hidden" th:field="*{incidentToUpdate.incidentIDPK}" >
       <input type="hidden" th:field="*{incidentToUpdate.userIDFK}" >
@@ -35,7 +47,7 @@
       <div class="layui-form-item">
         <label class="layui-form-label">Incident category</label>
         <div class="layui-input-block">
-          <input type="text"
+          <input type="text" maxlength="15"
                  th:field="*{incidentToUpdate.category}"  th:required="required" class="layui-input" />
         </div>
       </div>
@@ -85,9 +97,19 @@
       <div class="layui-form-item">
         <label class="layui-form-label">Phone number</label>
         <div class="layui-input-block">
-          <input type="text"  th:field="*{incidentToUpdate.reportedByPhoneNumber}" th:required="required" class="layui-input" />
+          <input type="text" maxlength="12" th:field="*{incidentToUpdate.reportedByPhoneNumber}" th:required="required" class="layui-input" />
         </div>
       </div>
+<!--      <div class="layui-form-item">-->
+<!--        <label class="layui-form-label">Image</label>-->
+<!--        <div class="layui-input-block">-->
+<!--          <button type="button" class="layui-btn" id="upload-image">-->
+<!--            <i class="layui-icon">&#xe67c;</i>Upload image-->
+<!--          </button>-->
+<!--          <img th:if="${incidentToUpdate.image != ''}" th:src="${'data:image/png;base64,' + imgData}" class="preview-image" id="preview" >-->
+<!--          <img th:if="${incidentToUpdate.image == ''}" class="preview-image" id="preview" >-->
+<!--        </div>-->
+<!--      </div>-->
       <div class="layui-form-item">
         <div class="layui-input-block">
           <button class="layui-btn" lay-submit >Update incident</button>
@@ -100,7 +122,28 @@
 
 <script type="text/javascript" >
 
-  layui.use('form')
+  layui.use(['form', 'upload'], function (){
+
+    // var upload = layui.upload
+    //
+    // upload.render({
+    //   elem: '#upload-image' //Binding element
+    //   ,accept: 'images'
+    //   ,acceptMime: 'image/*'
+    //   ,field: 'file'
+    //   ,auto: false
+    //   ,number: 1
+    //   ,choose: function(obj){
+    //     //Append each selected file to the file queue
+    //     var files = obj.pushFile();
+    //     //The local file is read in advance. If the file is multiple, it is traversed. (ie8/9 not supported)
+    //     obj.preview(function(index, file, result){
+    //       $('#preview').attr('src', result)
+    //     });
+    //   }
+    // })
+
+  })
 
 </script>
 
