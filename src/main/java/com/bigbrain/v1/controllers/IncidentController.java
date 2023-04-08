@@ -17,19 +17,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
 
 
 @Controller
@@ -130,10 +125,20 @@ public class IncidentController {
         }
         model.addAttribute("allIncidents", allIncidents);
       //  model.addAttribute("user", (Users) httpSession.getAttribute("user"));
-        int [] stats = incidentStats();
-        model.addAttribute("resolvedIncidents", stats[0]);
-        model.addAttribute("newIncidents", stats[1]);
+       // int [] stats = incidentStats();
+//        model.addAttribute("resolvedIncidents", stats[0]);
+//        model.addAttribute("newIncidents", stats[1]);
         return "incidentmap";
+    }
+
+    @GetMapping("/incidentmap/stats")
+    @ResponseBody
+    public Map<String, Integer> getIncidentStats() {
+        int [] stats = incidentStats();
+        Map<String, Integer> response = new HashMap<>();
+        response.put("resolvedIncidents", stats[0]);
+        response.put("newIncidents", stats[1]);
+        return response;
     }
 
     @GetMapping("/user/incidents")

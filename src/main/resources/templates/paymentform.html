@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="/layui/css/layui.css" th:href="@{/layui/css/layui.css}">
+    <script src="/layui/layui.js" th:src="@{/layui/layui.js}"></script>
+    <script src="/js/jquery.js" th:src="@{/js/jquery.js}"></script>
+</head>
+<body>
+
+<div class="layui-card">
+    <div class="layui-card-header">
+        <h3>Payment Form</h3>
+    </div>
+    <div class="layui-card-body">
+        <form action="#" class="layui-form" th:action="@{/user/userbills/{billidfk}/payment(billidfk=${newPayment.billIDFK})}" method="post">
+            <input type="hidden" th:field="*{newPayment.billIDFK}" >
+            <div class="layui-form-item">
+                <label class="layui-form-label">CreditCard Number</label>
+                <div class="layui-input-block">
+                    <input type="text" maxlength="16" th:field="*{newPayment.creditCardNumber}" th:required="required" class="layui-input" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">CVV</label>
+                <div class="layui-input-block">
+                    <input type="number" th:field="*{newPayment.CVV}"  th:required="required" class="layui-input" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">Expiration Month</label>
+                <div class="layui-input-block">
+                    <input type="number" th:field="*{newPayment.expirationMonth}"  th:required="required" class="layui-input" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">Expiration Year</label>
+                <div class="layui-input-block">
+                    <input type="number" th:field="*{newPayment.expirationYear}"  th:required="required" class="layui-input" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">Amount Paid</label>
+                <div class="layui-input-block">
+                    <input type="number" th:field="*{newPayment.amountPaid}"  th:required="required" class="layui-input" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit >Submit payment</button>
+                    <a th:if="${session.user.role == 'Manager'}" class="layui-btn" href="/admin/allbills" >Go back</a>
+                    <a th:if="${session.user.role != 'Manager'}" class="layui-btn" href="/user/userbills" >Go back</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript" >
+
+    layui.use(['form'], function (){
+
+    })
+
+</script>
+
+</body>
+</html>

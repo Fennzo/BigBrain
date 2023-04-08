@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="/layui/css/layui.css" th:href="@{/layui/css/layui.css}">
+    <script src="/layui/layui.js" th:src="@{/layui/layui.js}"></script>
+    <script src="/js/jquery.js" th:src="@{/js/jquery.js}"></script>
+</head>
+<body>
+
+<div class="layui-card">
+    <div class="layui-card-header">
+        <h3>Announcements Form</h3>
+    </div>
+    <div class="layui-card-body">
+        <form action="#" class="layui-form" th:action="@{/admin/createannouncement}" method="post">
+            <input type="hidden" th:field="*{newannouncement.userIDFK}" >
+            <div class="layui-form-item">
+                <label class="layui-form-label">Severity</label>
+                <div class="layui-input-block">
+                    <select th:field="*{newannouncement.severity}">
+                        <option th:each="item : ${T(com.bigbrain.v1.models.Announcements.Severities).values() }"
+                                th:value="*{item.toString()}"
+                                th:text="${item}">
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">Title</label>
+                <div class="layui-input-block">
+                    <input type="text" th:field="*{newannouncement.title}"
+                           th:required="required" class="layui-input" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">Description</label>
+                <div class="layui-input-block">
+                    <input type="text" th:field="*{newannouncement.description}"
+                           th:required="required" class="layui-input" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit >Submit announcement</button>
+                    <a class="layui-btn" href="/admin/allannouncements" >Go back</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript" >
+
+    layui.use(['form'], function (){
+
+    })
+
+</script>
+
+</body>
+</html>

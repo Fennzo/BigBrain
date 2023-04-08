@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="/layui/css/layui.css" th:href="@{/layui/css/layui.css}">
+    <script src="/layui/layui.js" th:src="@{/layui/layui.js}"></script>
+    <script src="/js/jquery.js" th:src="@{/js/jquery.js}"></script>
+    <style>
+        .flex-box {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+    </style>
+</head>
+<body>
+
+<div class="layui-card">
+    <div class="layui-card-header">
+        <h3>List of announcements</h3>
+    </div>
+    <div class="layui-card-body">
+
+        <div th:if="${ not#lists.isEmpty(allannouncements)}">
+            <table id="data-table" class="layui-table">
+                <thead>
+                <tr>
+                    <th>Severities</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Options</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item: ${allannouncements}">
+                    <td th:text="${item.severity}"></td>
+                    <td th:text="${item.title}"></td>
+                    <td th:text="${item.description}"></td>
+                    <td th:data-id="${item.announcementIDPK}">
+                        <a class="layui-btn layui-btn-sm layui-btn-danger"
+                           onclick="return confirm('Are you sure to delete?')"
+                           th:href="@{/admin/deleteannouncenment/{announcementIDPK}(announcementIDPK=${item.announcementIDPK})}">
+                            Delete
+                        </a>
+                        <a class="layui-btn layui-btn-sm"
+                           th:href="@{/admin/updateannouncment/{announcementIDPK}(announcementIDPK=${item.announcementIDPK})}">
+                            Edit
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <a class="layui-btn layui-btn-sm" th:href="@{/admin/createannouncement}">Create announcement</a>
+    </div>
+</div>
+
+
+<script type="text/javascript" th:inline="javascript">
+
+
+    layui.use('table', function () {
+        var table = layui.table
+        let dataList = []
+        $('#data-table tbody>tr').each((index, item) => {
+            dataList.push({
+                announcementIDPK: item.querySelector('td:nth-child(4)').getAttribute('data-id'),
+                severity: item.querySelector('td:nth-child(1)').innerText,
+                title: item.querySelector('td:nth-child(2)').innerText,
+                description: item.querySelector('td:nth-child(3)').innerText
+            })
+        })
+
+        $('#data-table').html('')
+        table.render({
+            elem: '#data-table'
+            , cols: [
+                [
+                    {field: 'severity', title: 'Severity', sort: true}
+                    , {field: 'title', title: 'Title', sort: true}
+                    , {field: 'description', title: 'Description', sort: true}
+                    , {
+                        title: 'Options', templet: function (row) {
+                            return `
+                                <a class="layui-btn layui-btn-sm layui-btn-danger" onclick="return confirm('Are you sure to delete?')" href="/admin/deleteannouncenment/${row.announcementIDPK}">
+                                  Delete
+                                </a>
+                                <a class="layui-btn layui-btn-sm" href="/admin/updateannouncment/${row.announcementIDPK}">
+                                  Edit
+                                </a>
+                          `
+                        }
+                    }
+                ]
+            ],
+            data: dataList
+        });
+
+    })
+
+
+</script>
+
+
+</body>
+</html>
