@@ -15,6 +15,10 @@
             align-items: center;
             justify-content: flex-start;
         }
+        .my-layer .layui-layer-content {
+            background-color: #22345B;
+            border-color: #22345B;
+        }
     </style>
 </head>
 <body>
@@ -41,14 +45,17 @@
                     <td th:text="${item.title}"></td>
                     <td th:text="${item.description}"></td>
                     <td th:data-id="${item.announcementIDPK}">
+                        <a class="layui-btn layui-btn-sm" onclick="getDetail()">
+                            <i class="layui-icon layui-icon-search"></i>
+                        </a>
                         <a class="layui-btn layui-btn-sm layui-btn-danger"
                            onclick="return confirm('Are you sure to delete?')"
                            th:href="@{/admin/deleteannouncenment/{announcementIDPK}(announcementIDPK=${item.announcementIDPK})}">
-                            Delete
+                            <i class="layui-icon layui-icon-delete"></i>
                         </a>
                         <a class="layui-btn layui-btn-sm"
                            th:href="@{/admin/updateannouncment/{announcementIDPK}(announcementIDPK=${item.announcementIDPK})}">
-                            Edit
+                            <i class="layui-icon layui-icon-edit"></i>
                         </a>
                     </td>
                 </tr>
@@ -56,6 +63,33 @@
             </table>
         </div>
         <a class="layui-btn layui-btn-sm" th:href="@{/admin/createannouncement}">Create announcement</a>
+    </div>
+</div>
+
+<div class="layui-card" id="card" style="display: none">
+    <style type="text/css" rel="stylesheet">
+        .title{
+            text-align: center;
+            color: #fff;
+        }
+        .content{
+            color: #fff;
+            margin-top: 10px;
+        }
+        #card-body .layui-badge{
+            margin-left: 10px;
+        }
+        #card-body .flex-box{
+            justify-content: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, .5);
+        }
+    </style>
+    <div class="layui-card-body" id="card-body">
+        <div class="flex-box">
+            <h2 class="title">MOVING TO STATE COLLEGE IN FALL, 2023? </h2><span class="layui-badge"></span>
+        </div>
+        <p class="content">Check out our sister property, Blue Course Commons!  Click here to take a virtual tour right nowl</p>
     </div>
 </div>
 
@@ -86,11 +120,14 @@
                     , {
                         title: 'Options', templet: function (row) {
                             return `
+                                <a class="layui-btn layui-btn-sm" onclick="getDetail('${row.announcementIDPK}')">
+                                    <i class="layui-icon layui-icon-search"></i>
+                                </a>
                                 <a class="layui-btn layui-btn-sm layui-btn-danger" onclick="return confirm('Are you sure to delete?')" href="/admin/deleteannouncenment/${row.announcementIDPK}">
-                                  Delete
+                                  <i class="layui-icon layui-icon-delete"></i>
                                 </a>
                                 <a class="layui-btn layui-btn-sm" href="/admin/updateannouncment/${row.announcementIDPK}">
-                                  Edit
+                                  <i class="layui-icon layui-icon-edit"></i>
                                 </a>
                           `
                         }
@@ -99,6 +136,20 @@
             ],
             data: dataList
         });
+
+        window.getDetail = function (id){
+            let find = dataList.find(el => el.announcementIDPK == id)
+            $('#card .title').text(find.title)
+            $('#card .content').text(find.description)
+            $('#card .layui-badge').text(find.severity)
+            layer.open({
+                type: 1,
+                skin: 'my-layer',
+                area: ['800px', '450px'],
+                title: find.title,
+                content: $('#card').html()
+            });
+        }
 
     })
 

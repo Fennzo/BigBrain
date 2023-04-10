@@ -45,10 +45,10 @@
                         </td>
                         <td>
                             <a class="layui-btn layui-btn-sm layui-btn-danger"  onclick="return confirm('Are you sure to delete?')" th:href="@{/user/deleteincidents/{incidentIDPK}(incidentIDPK=${incident.incidentIDPK})}">
-                                Delete
+                                <i class="layui-icon layui-icon-delete"></i>
                             </a>
                             <a class="layui-btn layui-btn-sm" th:href="@{/user/updateincident/{incidentIDPK}(incidentIDPK=${incident.incidentIDPK})}">
-                                Edit
+                                <i class="layui-icon layui-icon-edit"></i>
                             </a>
                         </td>
                     </tr>
@@ -94,10 +94,10 @@
                     , {title: 'Options', templet: function (row){
                         return `
                             <a class="layui-btn layui-btn-sm layui-btn-danger" onclick="return confirm('Are you sure to delete?')" href="/user/deleteincidents/${row.incidentIDPK}">
-                                Delete
+                                <i class="layui-icon layui-icon-delete"></i>
                             </a>
                             <a class="layui-btn layui-btn-sm" href="/user/updateincident/${row.incidentIDPK}">
-                                Edit
+                                <i class="layui-icon layui-icon-edit"></i>
                             </a>
                         `
                     }}

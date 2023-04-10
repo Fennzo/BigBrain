@@ -14,37 +14,37 @@
 
 <div class="layui-card">
   <div class="layui-card-header">
-    <h3>All requests</h3>
+    <h3>Your requests</h3>
   </div>
   <div class="layui-card-body">
-    <div th:if="${ not#lists.isEmpty(allUserRequests)}">
+    <div th:if="${ not#lists.isEmpty(userRequests)}">
       <table class="layui-table" id="data-table">
         <thead>
-          <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Priority</th>
-            <th>Status</th>
-            <th>Request date</th>
-            <th>Assigned Maintenance</th>
-          </tr>
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Priority</th>
+          <th>Status</th>
+          <th>Request date</th>
+          <th>Assigned Maintenance</th>
+        </tr>
         </thead>
         <tbody>
-          <tr th:each="request : ${allUserRequests}">
-            <td th:text="${request.title}"></td>
-            <td th:text="${request.description}"></td>
-            <td th:text="${request.priority}"></td>
-            <td th:text="${request.status}"></td>
-            <td th:text="${request.requestDate}"></td>
-            <td th:data-id="${request.requestIDPK}">
-              <a class="layui-btn layui-btn-sm layui-btn-danger" onclick="return confirm('Are you sure to delete?')" th:href="@{/deleterequest/{requestIDPK}(requestIDPK=${request.requestIDPK})}">
-                <i class="layui-icon layui-icon-delete"></i>
-              </a>
-              <a class="layui-btn layui-btn-sm" th:href="@{/updaterequest/{requestIDPK}(requestIDPK=${request.requestIDPK})}">
-                <i class="layui-icon layui-icon-edit"></i>
-              </a>
-            <td>
-          </tr>
+        <tr th:each="request : ${userRequests}">
+          <td th:text="${request.title}"></td>
+          <td th:text="${request.description}"></td>
+          <td th:text="${request.priority}"></td>
+          <td th:text="${request.status}"></td>
+          <td th:text="${request.requestDate}"></td>
+          <td th:data-id="${request.requestIDPK}">
+            <a class="layui-btn layui-btn-sm layui-btn-danger" onclick="return confirm('Are you sure to delete?')" th:href="@{/deleterequest/{requestIDPK}(requestIDPK=${request.requestIDPK})}">
+              <i class="layui-icon layui-icon-delete"></i>
+            </a>
+            <a class="layui-btn layui-btn-sm" th:href="@{/updaterequest/{requestIDPK}(requestIDPK=${request.requestIDPK})}">
+              <i class="layui-icon layui-icon-edit"></i>
+            </a>
+          <td>
+        </tr>
         </tbody>
       </table>
     </div>
@@ -81,8 +81,8 @@
           , {field: 'status', title: 'Status', sort: true}
           , {field: 'requestDate', title: 'Request date', sort: true}
           , {
-              title: 'Assigned Maintenance', templet: function (row){
-                return `
+          title: 'Assigned Maintenance', templet: function (row){
+            return `
                     <a class="layui-btn layui-btn-sm layui-btn-danger" onclick="return confirm('Are you sure to delete?')" href="/deleterequest/${row.requestIDPK}">
                       <i class="layui-icon layui-icon-delete"></i>
                     </a>
@@ -90,8 +90,8 @@
                       <i class="layui-icon layui-icon-edit"></i>
                     </a>
                 `
-              }
-            }
+          }
+        }
         ]
       ],
       data: dataList

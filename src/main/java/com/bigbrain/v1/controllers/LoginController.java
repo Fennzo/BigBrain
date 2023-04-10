@@ -15,7 +15,9 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,7 +67,6 @@ public class LoginController {
         model.addAttribute("user", user);
         httpSession.setAttribute("user", user);
 
-        registerUserRoleWithSpringSecurity(SecurityContextHolder.getContext().getAuthentication(), user);
         //feed announcement to welcome
         Announcements latestAnnouncement = announcementRepository.findLatest();
         model.addAttribute("latestAnnouncement", latestAnnouncement);
@@ -92,6 +93,30 @@ public class LoginController {
         Announcements latestAnnouncement = announcementRepository.findLatest();
         model.addAttribute("latestAnnouncement", latestAnnouncement);
         return "redirect:/backend";
+    }
+
+    @GetMapping("/backend")
+    public String backend(@AuthenticationPrincipal OAuth2User principal, Model model){
+        String email = principal.getAttribute("email");
+        Users user = usersRepository.findByEmail(email);
+
+        //System.out.println("Found user: " + user);
+        // User not found, proceed with registration
+        if ( user == null){
+            String firstName = principal.getAttribute("given_name");
+            String lastName = principal.getAttribute("family_name");
+            Users newUser = new Users(email, firstName, lastName);
+
+            model.addAttribute("newUser", newUser);
+            //System.out.println("NEW USER: " + newUser.toString());
+            model.addAttribute("newAddress", new Addresses()); // adduserIDFK
+            return "registration";
+        }
+
+        registerUserRoleWithSpringSecurity(SecurityContextHolder.getContext().getAuthentication(), user);
+
+        model.addAttribute("user", user);
+        return "main";
     }
 
 

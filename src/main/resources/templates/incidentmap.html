@@ -9,11 +9,17 @@
     <link rel="stylesheet" href="/layui/css/layui.css" th:href="@{/layui/css/layui.css}">
     <script src="/layui/layui.js" th:src="@{/layui/layui.js}"></script>
     <script src="/js/jquery.js" th:src="@{/js/jquery.js}"></script>
+    <script src="/js/echarts.min.js" th:src="@{/js/echarts.min.js}"></script>
     <style>
-        .flex-box{
+        .flex-box {
             display: flex;
             align-items: center;
             justify-content: flex-start;
+        }
+        #chart{
+            width: 100%;
+            height: 400px;
+            margin: 20px 0;
         }
     </style>
 </head>
@@ -33,78 +39,85 @@
 
         <script>
             // initialize map
-            const map_parameters = { center: {lat: 40.210108, lng: -76.775418}, zoom: 17 };
+            const map_parameters = {center: {lat: 40.210108, lng: -76.775418}, zoom: 17};
             const map = new google.maps.Map(document.getElementById('map'), map_parameters);
-            let markers = [];
             let marker
             let marked
         </script>
 
         <hr>
 
+        <div id="chart" ></div>
+
+        <hr>
+
         <div th:if="${ not#lists.isEmpty(allIncidents)}">
             <table class="layui-table" id="data-table">
                 <thead>
-                    <tr>
-                        <th>Label</th>
-                        <th>Incident category</th>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th>Status</th>
-                        <th>Date</th>
-                        <th>Image</th>
-                    </tr>
+                <tr>
+                    <th>Label</th>
+                    <th>Incident category</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Image</th>
+                </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="incident, stat : ${allIncidents}">
-                        <td th:text="${incident.incidentIDPK}"></td>
-                        <td th:text="${incident.category}"></td>
-                        <td th:text="${incident.title}"></td>
-                        <td th:text="${incident.description}"></td>
-                        <td th:text="${incident.status}"></td>
-                        <td th:text="${incident.incidentDate}"></td>
-                        <td>
-                            <img th:src="${'data:image/png;base64,' + imageList.get(stat.index)}" width="120px" alt="">
-                        </td>
-                        <script>
-                            markers.push({
-                                incidentIDPK: [[${incident.incidentIDPK}]],
-                                latitude: [[${incident.latitude}]],
-                                longitude: [[${incident.longitude}]],
-                                title: "Title: [[${incident.title}]]<br>",
-                                description: "Description: [[${incident.description}]]<br>"
-                            });
-                            marker = markers[markers.length-1]
-                            console.log(marker);
-                            marked = new google.maps.Marker({
-                                position: {lat: marker.latitude, lng: marker.longitude},
-                                map: map,
-                                label: {
-                                    color: '#000',
-                                    fontSize: '12px',
-                                    fontWeight: '600',
-                                    text: marker.incidentIDPK.toString()
-                                }
-                            });
+                <tr th:each="incident, stat : ${allIncidents}">
+                    <td th:text="${incident.incidentIDPK}"></td>
+                    <td th:text="${incident.category}"></td>
+                    <td th:text="${incident.title}"></td>
+                    <td th:text="${incident.description}"></td>
+                    <td th:text="${incident.status}"></td>
+                    <td th:text="${incident.incidentDate}"></td>
+                    <td>
+                        <img th:src="${'data:image/png;base64,' + imageList.get(stat.index)}" width="120px" alt="">
+                    </td>
+                    <script>
+                        marker = {
+                            incidentIDPK: [[${incident.incidentIDPK}]],
+                            latitude: [[${incident.latitude}]],
+                            longitude: [[${incident.longitude}]],
+                            title: "[[${incident.title}]]",
+                            description: "[[${incident.description}]]",
+                            image: 'data:image/png;base64,' + "[[${imageList.get(stat.index)}]]"
+                        }
+                        marked = new google.maps.Marker({
+                            position: {lat: marker.latitude, lng: marker.longitude},
+                            map: map,
+                            label: {
+                                color: '#000',
+                                fontSize: '12px',
+                                fontWeight: '600',
+                                text: marker.incidentIDPK.toString()
+                            },
+                            originData: marker
+                        })
+                        marked.addListener('click', function () {
+                            let infowindow = new google.maps.InfoWindow({
+                                content: `
+                                        <div>
+                                            <p>${this.originData.title}</p>
+                                            <p>${this.originData.description}</p>
+                                            <img src="${this.originData.image}" width="120px" alt="">
+                                        </div>
+                                    `
+                            })
+                            infowindow.open(map, this);
+                        });
 
-
-                            marked.addListener('click', function() {
-                                let infowindow = new google.maps.InfoWindow({
-                                    content: marker.title + '\n' + marker.description
-                                });
-                                infowindow.open(map, marked);
-                            });
-
-                        </script>
-                    </tr>
+                    </script>
+                </tr>
                 </tbody>
             </table>
         </div>
         <div class="flex-box">
-            <h3>Incidents resolved last month: </h3> <span th:text = "${resolvedIncidents}"></span>
+            <h3>Incidents resolved last month: </h3> <span th:text="${resolvedIncidents}"></span>
         </div>
         <div class="flex-box">
-            <h3>New Incidents last month: </h3> <span th:text = "${newIncidents}"></span>
+            <h3>New Incidents last month: </h3> <span th:text="${newIncidents}"></span>
         </div>
         <a class="layui-btn layui-btn-sm" th:href="@{/incidentform}">Submit incident</a>
         <a class="layui-btn layui-btn-sm" th:href="@{/user/incidents}">My incidents</a>
@@ -132,6 +145,7 @@
         $('#data-table').html('')
         table.render({
             elem: '#data-table'
+            , height: 400
             , cols: [
                 [
                     {field: 'incidentIDPK', title: 'Label', sort: true}
@@ -140,19 +154,55 @@
                     , {field: 'description', title: 'Description', sort: true}
                     , {field: 'status', title: 'Status', sort: true}
                     , {field: 'incidentDate', title: 'Date', sort: true}
-                    , {field: 'image', title: 'Image', templet: function (row){
+                    , {
+                    field: 'image', title: 'Image', templet: function (row) {
                         return ` <img src="${row.image}" width="120px" alt="">`
-                    }}
+                    }
+                }
                 ]
             ],
-            data: dataList
+            data: dataList.slice(0, 10)
         });
+
+
+        $.get('/incidentmap/stats', function (res){
+            let chart = echarts.init(document.querySelector('#chart'))
+            chart.setOption({
+                tooltip: {
+                    trigger: 'item'
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left'
+                },
+                series: [
+                    {
+                        name: 'Percentage',
+                        type: 'pie',
+                        radius: '50%',
+                        data: [
+                            { value: res.resolvedIncidents, name: 'ResolvedIncidents' },
+                            { value: res.newIncidents, name: 'NewIncidents' },
+                        ],
+                        label: {
+                            formatter: '{b}  {d}%'
+                        },
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            })
+        })
 
     })
 
 
 </script>
-
 
 
 </body>

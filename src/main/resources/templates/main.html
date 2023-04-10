@@ -42,10 +42,22 @@
                         <em>Welcome</em>
                     </a>
                 </li>
-                <li class="layui-nav-item" >
+                <li class="layui-nav-item" sec:authorize="hasAnyAuthority('Manager')">
                     <a href="/admin/alluserrequests">
                         <i class="layui-icon">&#xe857;</i>
                         <em>Requests</em>
+                    </a>
+                </li>
+                <li class="layui-nav-item" sec:authorize="hasAnyAuthority('Maintenance')">
+                    <a href="/admin/alluserrequests">
+                        <i class="layui-icon">&#xe857;</i>
+                        <em>Assigned Requests</em>
+                    </a>
+                </li>
+                <li class="layui-nav-item" sec:authorize="hasAnyAuthority('Homeowner')">
+                    <a href="/user/userrequests">
+                        <i class="layui-icon">&#xe857;</i>
+                        <em>My Requests</em>
                     </a>
                 </li>
                 <li class="layui-nav-item"  sec:authorize="hasAnyAuthority('Manager')">
@@ -54,7 +66,7 @@
                         <em>Bills</em>
                     </a>
                 </li>
-                <li class="layui-nav-item"  sec:authorize="hasAnyAuthority('Maintenance', 'Homeowner')">
+                <li class="layui-nav-item"  sec:authorize="hasAnyAuthority('Homeowner')">
                     <a href="/user/userbills">
                         <i class="layui-icon">&#xe857;</i>
                         <em>Bills</em>
@@ -66,7 +78,7 @@
                         <em>Incidents</em>
                     </a>
                 </li>
-                <li class="layui-nav-item">
+                <li class="layui-nav-item" sec:authorize="hasAnyAuthority('Manager')">
                     <a href="/admin/allannouncements">
                         <i class="layui-icon">&#xe857;</i>
                         <em>Announcement</em>
