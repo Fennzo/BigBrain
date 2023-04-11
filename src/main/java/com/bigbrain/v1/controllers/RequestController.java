@@ -102,17 +102,20 @@ public class RequestController {
         return "redirect:/admin/alluserrequests";
     }
 
-    @GetMapping("/maintenance/assignedrequests")
-    public void viewAllAssignedRequests(HttpSession httpSession){
+  @GetMapping("/maintenance/assignedrequests")
+    public String viewAllAssignedRequests(HttpSession httpSession, Model model){
         Users user = (Users) httpSession.getAttribute("user");
         int maintenanceIdPk = maintenanceRepository.getMaintenanceIdPk(user.getUserIdPK());
         List<Requests> assignedRequests = requestRepository.findAllByMaintenanceIdFk(maintenanceIdPk);
-        // return assignedRequests
+        model.addAttribute("assignedRequests", assignedRequests);
+        return "Maintenanceallrequests";
     }
 
-    @PostMapping("/maintenance/assignedrequests")// receive requestToUpdate
-    public void updateRequestStatues(){
-        //requestRepository.update(requestToUpdate, requestToUpdate.getRequestIDPK());
+    @PostMapping("/maintenance/assignedrequests/{requestIDPK}")// receive requestToUpdate
+    public void updateRequestStatues(@PathVariable int requestIDPK, @RequestParam String requestStatus){
+        Requests requestToUpdate = requestRepository.findById(requestIDPK);
+        requestToUpdate.setStatus(requestStatus);
+        requestRepository.update(requestToUpdate, requestIDPK);
     }
 
     public int assignMaintenance(){
