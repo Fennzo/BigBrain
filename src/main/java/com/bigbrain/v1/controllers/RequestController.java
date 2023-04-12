@@ -16,6 +16,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Controller
 public class RequestController {
@@ -41,11 +43,9 @@ public class RequestController {
     }
 
     @PostMapping("/user/requestform")
-    public String submitRequestForm(@ModelAttribute("newRequest") Requests newRequest,HttpSession httpSession, Model model){
-        Users user = (Users) httpSession.getAttribute("user");
+    public String submitRequestForm(@ModelAttribute("newRequest") Requests newRequest,HttpSession httpSession,Model model){
 
         Addresses address = addressRepository.findByUserID(newRequest.getRequestUserIDFK());
-
         newRequest.setAddressIDFK(address.getAddressIDPK());
         // assign maintenance
         int maintenanceAssignment = assignMaintenance();
@@ -53,12 +53,34 @@ public class RequestController {
             newRequest.setMaintenanceIdFK(maintenanceAssignment);
             newRequest.setStatus(Requests.Statuses.Assigned.toString());
         }
-        else{
+        else
             newRequest.setStatus(Requests.Statuses.Received.toString());
+
+       // System.out.println("NEW REQUESTS: " + newRequest.toString());
+        try{
+            requestRepository.save(newRequest);
+            return "redirect:/welcome";
+        }catch (Exception e) {
+            String errorMessage = e.getMessage();
+            String parsedMessage;
+            System.out.println("EXCEPTION ERROR " + errorMessage);
+            if(errorMessage.contains("constraint")){
+                Pattern pattern = Pattern.compile("column\\s'(\\w+)'\\.");
+                Matcher matcher = pattern.matcher(errorMessage);
+                matcher.find();
+                parsedMessage = matcher.group(1) + " is invalid";
+            }
+            else{
+                Pattern pattern = Pattern.compile("(?<=error code \\[50000];\\s)([^;]*$)");
+                Matcher matcher = pattern.matcher(errorMessage);
+                matcher.find();
+                parsedMessage = matcher.group(1);
+
+            }
+            model.addAttribute("errorMessage", parsedMessage);
+            return "submitrequestform";
         }
-        System.out.println("NEW REQUESTS: " + newRequest.toString());
-        requestRepository.save(newRequest);
-        return "redirect:/welcome";
+
     }
 
     @GetMapping("/user/userrequests")

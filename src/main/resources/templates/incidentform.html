@@ -107,6 +107,8 @@
       </div>
       <div class="layui-form-item">
         <div class="layui-input-block">
+          <div th:if="${errorMessage}">
+            <p th:text="${errorMessage}"></p></div>
           <button class="layui-btn" lay-submit >Submit incident</button>
           <a class="layui-btn" href="/incidentmap" >Go back</a>
         </div>

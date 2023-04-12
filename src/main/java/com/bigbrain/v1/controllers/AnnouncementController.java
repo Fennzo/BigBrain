@@ -3,6 +3,7 @@ package com.bigbrain.v1.controllers;
 import com.bigbrain.v1.DAOandRepositories.AnnouncementRepository;
 import com.bigbrain.v1.models.Announcements;
 import com.bigbrain.v1.models.Users;
+import com.bigbrain.v1.services.ParseErrorMessageService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,9 +20,10 @@ import java.util.List;
 public class AnnouncementController {
 
     private AnnouncementRepository announcementRepository;
-
+    private ParseErrorMessageService parseErrorMessageService;
     @Autowired
-    public AnnouncementController(AnnouncementRepository announcementRepository) {
+    public AnnouncementController(AnnouncementRepository announcementRepository, ParseErrorMessageService parseErrorMessageService) {
+        this.parseErrorMessageService = parseErrorMessageService;
         this.announcementRepository = announcementRepository;
     }
 
@@ -40,28 +42,50 @@ public class AnnouncementController {
     }
 
     @PostMapping("/admin/createannouncement")
-    public String submitAnnouncement(@ModelAttribute("newAnnouncement") Announcements newAnnouncement){
-        announcementRepository.save(newAnnouncement);
-        return "redirect:/admin/allannouncements";
+    public String submitAnnouncement(@ModelAttribute("newAnnouncement") Announcements newAnnouncement, Model model){
+        try{
+            announcementRepository.save(newAnnouncement);
+            return "redirect:/admin/allannouncements";
+        }
+        catch (Exception e){
+            String parsedMessage = parseErrorMessageService.parseErrorMessage(e.getMessage());
+            model.addAttribute("errorMessage", parsedMessage);
+            return "adminannouncementform";
+        }
     }
-
 
     @GetMapping("/admin/updateannouncment/{announcementIDPK}")
     public String updateAnnouncement(@PathVariable int announcementIDPK, Model model){
+
         Announcements announcementUpdatable = announcementRepository.findByPk(announcementIDPK);
         model.addAttribute("announcementUpdatable", announcementUpdatable);
         return "adminannouncementupdateform";
     }
 
     @PostMapping("/admin/updateannouncment")
-    public String submitUpdateAnnouncement(Announcements updateAnnouncement){
-        announcementRepository.update(updateAnnouncement, updateAnnouncement.getAnnouncementIDPK());
-        return "redirect:/admin/allannouncements";
+    public String submitUpdateAnnouncement(Announcements updateAnnouncement, Model model){
+        try{
+            announcementRepository.update(updateAnnouncement, updateAnnouncement.getAnnouncementIDPK());
+            return "redirect:/admin/allannouncements";
+        }
+      catch (Exception e){
+          String parsedMessage = parseErrorMessageService.parseErrorMessage(e.getMessage());
+          model.addAttribute("errorMessage", parsedMessage);
+          return "adminannouncementupdateform";
+      }
     }
 
     @GetMapping("/admin/deleteannouncenment/{announcementIDPK}")
-    public String deleteAnnouncement(@PathVariable int announcementIDPK){
-        announcementRepository.deleteByID(announcementIDPK);
-        return "redirect:/admin/allannouncements";
+    public String deleteAnnouncement(@PathVariable int announcementIDPK, Model model){
+        try{
+            announcementRepository.deleteByID(announcementIDPK);
+            return "redirect:/admin/allannouncements";
+        }
+        catch (Exception e){
+            String parsedMessage = parseErrorMessageService.parseErrorMessage(e.getMessage());
+            model.addAttribute("errorMessage", parsedMessage);
+            return "adminallannouncements";
+        }
+
     }
 }

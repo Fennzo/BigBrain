@@ -5,6 +5,7 @@ import com.bigbrain.v1.models.Incidents;
 import com.bigbrain.v1.models.Users;
 import com.bigbrain.v1.DAOandRepositories.IncidentRepository;
 import com.bigbrain.v1.DAOandRepositories.UsersRepository;
+import com.bigbrain.v1.services.ParseErrorMessageService;
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.errors.ApiException;
@@ -25,6 +26,8 @@ import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @Controller
@@ -34,10 +37,12 @@ public class IncidentController {
     private IncidentRepository incidentRepository;
 
     private UsersRepository usersRepository;
+    private ParseErrorMessageService parseErrorMessageService;
 
     @Autowired
-    public IncidentController(IncidentRepository incidentRepository, UsersRepository usersRepository) {
+    public IncidentController(IncidentRepository incidentRepository, UsersRepository usersRepository, ParseErrorMessageService parseErrorMessageService) {
         this.incidentRepository = incidentRepository;
+        this.parseErrorMessageService = parseErrorMessageService;
         this.usersRepository = usersRepository;
     }
 
@@ -94,17 +99,12 @@ public class IncidentController {
         try {
             //System.out.println("New incident:" + newIncident.toString());
             incidentRepository.save(newIncident);
-        }catch (Exception e){
-            e.printStackTrace();
-            return "redirect:/incidentform?msg=The format of the mobile phone number is incorrect";
+            return "redirect:/incidentmap";
+        }catch (Exception e) {
+            String parsedMessage = parseErrorMessageService.parseErrorMessage(e.getMessage());
+            model.addAttribute("errorMessage", parsedMessage);
+            return "incidentform";
         }
-
-//        List<Incidents> allIncidents = incidentRepository.findAll();
-
-//        model.addAttribute("allIncidents", allIncidents);
-     //   model.addAttribute("user", usersRepository.findById(newIncident.getUserIDFK()));
-//        return "incidentmap";
-        return "redirect:/incidentmap";
     }
 
     @GetMapping("/incidentmap")
@@ -124,10 +124,6 @@ public class IncidentController {
             model.addAttribute("imageList", imgDataList);
         }
         model.addAttribute("allIncidents", allIncidents);
-      //  model.addAttribute("user", (Users) httpSession.getAttribute("user"));
-       // int [] stats = incidentStats();
-//        model.addAttribute("resolvedIncidents", stats[0]);
-//        model.addAttribute("newIncidents", stats[1]);
         return "incidentmap";
     }
 
@@ -162,18 +158,20 @@ public class IncidentController {
 
         //System.out.println("USERINCIDENTS: " + userIncidents);
         model.addAttribute("userIncidents", userIncidents);
-        //model.addAttribute("user", user);
         return "userincidents";
     }
 
     @GetMapping("/user/deleteincidents/{incidentIDPK}")
     public String deleteIncidents(@PathVariable int incidentIDPK,HttpSession httpSession, Model model){
-        incidentRepository.deleteById(incidentIDPK);
-//        List<Incidents> allIncidents = incidentRepository.findAll();
-     //   model.addAttribute("user", (Users) httpSession.getAttribute("user"));
-//        model.addAttribute("allIncidents", allIncidents);
-//        return "incidentmap";
-        return "redirect:/incidentmap";
+        try{
+            incidentRepository.deleteById(incidentIDPK);
+            return "redirect:/incidentmap";
+        }
+        catch (Exception e){
+            String parsedMessage = parseErrorMessageService.parseErrorMessage(e.getMessage());
+            model.addAttribute("errorMessage", parsedMessage);
+            return "userIncidents";
+        }
     }
 
     @GetMapping("/user/updateincident/{incidentIDPK}")
@@ -216,23 +214,17 @@ public class IncidentController {
         }
 
 
-
        try {
            // System.out.println("New incident:" + incidentToUpdate.toString());
            incidentRepository.updateById(incidentToUpdate, incidentToUpdate.getIncidentIDPK());
+           return "redirect:/incidentmap";
        }catch (Exception e){
-           e.printStackTrace();
-           return "redirect:/user/updateincident/" + incidentToUpdate.getIncidentIDPK() + "?msg=The format of the mobile phone number is incorrect";
+           String parsedMessage = parseErrorMessageService.parseErrorMessage(e.getMessage());
+           model.addAttribute("errorMessage", parsedMessage);
+           return "incidentupdateform";
        }
 
 
-//        List<Incidents> allIncidents = incidentRepository.findAll();
-
-
-//        model.addAttribute("allIncidents", allIncidents);
-//        model.addAttribute("user", (Users) httpSession.getAttribute("user"));
-//        return "incidentmap";
-        return "redirect:/incidentmap";
     }
 
     /*
