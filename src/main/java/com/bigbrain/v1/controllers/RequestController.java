@@ -102,7 +102,13 @@ public class RequestController {
         Users user = (Users) httpSession.getAttribute("user");
         model.addAttribute("user", user);
         requestRepository.deleteById(requestIDPK);
-        return "redirect:/admin/alluserrequests" ;
+
+        if (user.getRole().equals("Manager")){
+            return "redirect:/admin/alluserrequests";
+        }
+        else{
+            return "redirect:/user/userrequests";
+        }
     }
 
     @GetMapping("/updaterequest/{requestIDPK}")
@@ -119,7 +125,12 @@ public class RequestController {
         Users user = (Users) httpSession.getAttribute("user");
         requestRepository.update(requestToUpdate, requestToUpdate.getRequestIDPK());
         model.addAttribute("user", user);
-        return "redirect:/admin/alluserrequests" ;
+        if (user.getRole().equals("Manager")){
+            return "redirect:/admin/alluserrequests";
+        }
+        else{
+            return "redirect:/user/userrequests";
+        }
     }
 
     @GetMapping("/maintenance/assignedrequests")
@@ -128,6 +139,7 @@ public class RequestController {
         int maintenanceIdPk = maintenanceRepository.getMaintenanceIdPk(user.getUserIdPK());
         List<Requests> assignedRequests = requestRepository.findAllByMaintenanceIdFk(maintenanceIdPk);
         model.addAttribute("assignedRequests", assignedRequests);
+        System.out.println("assigned requests:" + assignedRequests);
         return "Maintenanceallrequests" ;
     }
 
@@ -136,6 +148,7 @@ public class RequestController {
     public String updateRequestStatues(@PathVariable int requestIDPK, @RequestParam String requestStatus) {
         Requests requestToUpdate = requestRepository.findById(requestIDPK);
         requestToUpdate.setStatus(requestStatus);
+       // System.out.println("Maintenance update request " + requestToUpdate + requestStatus);
         requestRepository.update(requestToUpdate, requestIDPK);
         return "ok";
     }

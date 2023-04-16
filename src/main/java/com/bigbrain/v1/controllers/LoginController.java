@@ -47,25 +47,23 @@ public class LoginController {
 
 
     @RequestMapping(value =  "/welcome")
-    public String postLogin(@AuthenticationPrincipal OAuth2User principal, ModelMap model, HttpSession httpSession){
-        String email = principal.getAttribute("email");
-        Users user = usersRepository.findByEmail(email);
+    public String postLogin(ModelMap model, HttpSession httpSession){
+        Users user = (Users) httpSession.getAttribute("user");
 
-        System.out.println("Found user: " + user);
-        // User not found, proceed with registration
-        if ( user == null){
-            String firstName = principal.getAttribute("given_name");
-            String lastName = principal.getAttribute("family_name");
-            Users newUser = new Users(email, firstName, lastName);
-
-            model.addAttribute("newUser", newUser);
-            //System.out.println("NEW USER: " + newUser.toString());
-            model.addAttribute("newAddress", new Addresses());
-            return "registration";
-        }
+//        System.out.println("Found user: " + user);
+//        if ( user == null){
+//            String firstName = principal.getAttribute("given_name");
+//            String lastName = principal.getAttribute("family_name");
+//            Users newUser = new Users(email, firstName, lastName);
+//
+//            model.addAttribute("newUser", newUser);
+//            //System.out.println("NEW USER: " + newUser.toString());
+//            model.addAttribute("newAddress", new Addresses());
+//            return "registration";
+//        }
 
         model.addAttribute("user", user);
-        httpSession.setAttribute("user", user);
+        //httpSession.setAttribute("user", user);
 
         //feed announcement to welcome
         Announcements latestAnnouncement = announcementRepository.findLatest();
@@ -96,11 +94,11 @@ public class LoginController {
     }
 
     @GetMapping("/backend")
-    public String backend(@AuthenticationPrincipal OAuth2User principal, Model model){
+    public String backend(@AuthenticationPrincipal OAuth2User principal, Model model, HttpSession httpSession){
         String email = principal.getAttribute("email");
         Users user = usersRepository.findByEmail(email);
-
-        //System.out.println("Found user: " + user);
+        httpSession.setAttribute("user", user);
+        System.out.println("Found user: " + user);
         // User not found, proceed with registration
         if ( user == null){
             String firstName = principal.getAttribute("given_name");

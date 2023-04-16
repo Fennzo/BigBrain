@@ -56,16 +56,17 @@ public class AnnouncementController {
 
     @GetMapping("/admin/updateannouncment/{announcementIDPK}")
     public String updateAnnouncement(@PathVariable int announcementIDPK, Model model){
-
         Announcements announcementUpdatable = announcementRepository.findByPk(announcementIDPK);
         model.addAttribute("announcementUpdatable", announcementUpdatable);
         return "adminannouncementupdateform";
     }
 
+
     @PostMapping("/admin/updateannouncment")
-    public String submitUpdateAnnouncement(Announcements updateAnnouncement, Model model){
+    public String submitUpdateAnnouncement(@ModelAttribute("announcementUpdatable") Announcements announcementUpdatable, Model model){
         try{
-            announcementRepository.update(updateAnnouncement, updateAnnouncement.getAnnouncementIDPK());
+            System.out.println("Update announbcement " + announcementUpdatable);
+            announcementRepository.update(announcementUpdatable);
             return "redirect:/admin/allannouncements";
         }
       catch (Exception e){

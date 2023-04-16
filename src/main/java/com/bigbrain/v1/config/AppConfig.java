@@ -27,9 +27,9 @@ public class AppConfig {
 				.csrf().disable()
 				.authorizeHttpRequests(authorize -> authorize
 						.requestMatchers("/", "/registration", "/css/**", "/fonts/**", "/images/**", "/js/**", "/layui/**").permitAll()  // allows any request to the root URL ("/") and the registration URL ("/registration") without authentication
-						.requestMatchers("/user/**").hasAnyAuthority("Homeowner", "Manager") // only users with homeowner role
+						.requestMatchers("/user/**").hasAnyAuthority("Homeowner", "Manager", "Maintenance") // only users with homeowner role
 						.requestMatchers("/admin/**").hasAuthority("Manager") // only users with manager role
-						.requestMatchers("/mainteenance/**").hasAnyAuthority("Maintenance")
+						.requestMatchers("/maintenance/**").hasAnyAuthority("Maintenance")
 						.anyRequest().authenticated()
 				)
 				.oauth2Login()
@@ -53,7 +53,10 @@ public class AppConfig {
 	public DataSource getDatasource() {
 		DriverManagerDataSource datasource = new DriverManagerDataSource();
 		datasource.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-		datasource.setUrl("jdbc:sqlserver://localhost:1433;database=CapstoneDatabase;encrypt=true;trustServerCertificate=true;integratedSecurity=true");
+		datasource.setUrl("jdbc:sqlserver://capstonedatabase.c6643cisiv4r.us-east-2.rds.amazonaws.com:1433;databaseName=DB;encrypt=true;trustServerCertificate=true;");
+		datasource.setUsername("BigBrain");
+		datasource.setPassword("BigBrain!123");
+	//	datasource.setUrl("jdbc:sqlserver://localhost:1433;database=CapstoneDatabase;encrypt=true;trustServerCertificate=true;integratedSecurity=true");
 	//	datasource.setUrl("jdbc:sqlserver://localhost:1433;database=CapstoneDatabase;encrypt=false");
 //		datasource.setUsername("jyj123");
 	//	datasource.setUsername("sa");

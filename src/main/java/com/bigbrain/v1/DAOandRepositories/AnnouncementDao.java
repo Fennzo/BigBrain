@@ -8,7 +8,7 @@ public interface AnnouncementDao {
 
     int save(Announcements announcement);
     int deleteByID(int announcementIDPK);
-    int update(Announcements announcement, int announcementIDPK);
+    int update(Announcements announcement);
     Announcements findLatest();
     Announcements findByPk(int announcementIDPK);
     List<Announcements> findAll();
