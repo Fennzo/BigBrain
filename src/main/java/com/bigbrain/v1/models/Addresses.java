@@ -20,7 +20,7 @@ public class Addresses {
 
 	private String stateCode;
 
-	private int zipCode;
+	private String zipCode;
 	private List<Requests> requests;
 
 	public List<Requests> getRequests() {
@@ -34,7 +34,7 @@ public class Addresses {
 	public Addresses(int userIDFK){
 		this.userIDFK = userIDFK;
 	}
-	public Addresses(int userIDFK, String addressLine1, String addressLine2, String city, String stateCode, int zipCode) {
+	public Addresses(int userIDFK, String addressLine1, String addressLine2, String city, String stateCode, String zipCode) {
 		this.userIDFK = userIDFK;
 		this.addressLine1 = addressLine1;
 		this.addressLine2 = addressLine2;
@@ -95,11 +95,11 @@ public class Addresses {
 		this.stateCode = stateCode;
 	}
 
-	public int getZipCode() {
+	public String getZipCode() {
 		return zipCode;
 	}
 
-	public void setZipCode(int zipCode) {
+	public void setZipCode(String zipCode) {
 		this.zipCode = zipCode;
 	}
 

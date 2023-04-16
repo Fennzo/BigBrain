@@ -39,7 +39,7 @@
 
         <script>
             // initialize map
-            const map_parameters = {center: {lat: 40.210108, lng: -76.775418}, zoom: 17};
+            const map_parameters = {center: {lat: 40.23069818111977, lng: -77.01303836078226}, zoom: 13};
             const map = new google.maps.Map(document.getElementById('map'), map_parameters);
             let marker
             let marked
@@ -113,12 +113,6 @@
                 </tbody>
             </table>
         </div>
-        <div class="flex-box">
-            <h3>Incidents resolved last month: </h3> <span th:text="${resolvedIncidents}"></span>
-        </div>
-        <div class="flex-box">
-            <h3>New Incidents last month: </h3> <span th:text="${newIncidents}"></span>
-        </div>
         <a class="layui-btn layui-btn-sm" th:href="@{/incidentform}">Submit incident</a>
         <a class="layui-btn layui-btn-sm" th:href="@{/user/incidents}">My incidents</a>
     </div>
@@ -146,6 +140,8 @@
         table.render({
             elem: '#data-table'
             , height: 400
+            ,page: false
+            ,limit: 99999
             , cols: [
                 [
                     {field: 'incidentIDPK', title: 'Label', sort: true}
@@ -161,7 +157,7 @@
                 }
                 ]
             ],
-            data: dataList.slice(0, 10)
+            data: dataList
         });
 
 
@@ -181,8 +177,8 @@
                         type: 'pie',
                         radius: '50%',
                         data: [
-                            { value: res.resolvedIncidents, name: 'ResolvedIncidents' },
-                            { value: res.newIncidents, name: 'NewIncidents' },
+                            { value: res.resolvedIncidents, name: 'Resolved incidents last month' },
+                            { value: res.newIncidents, name: 'New incidents last month' },
                         ],
                         label: {
                             formatter: '{b}  {d}%'

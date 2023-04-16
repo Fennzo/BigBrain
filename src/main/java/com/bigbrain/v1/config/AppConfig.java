@@ -54,11 +54,11 @@ public class AppConfig {
 		DriverManagerDataSource datasource = new DriverManagerDataSource();
 		datasource.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 		datasource.setUrl("jdbc:sqlserver://localhost:1433;database=CapstoneDatabase;encrypt=true;trustServerCertificate=true;integratedSecurity=true");
-//		datasource.setUrl("jdbc:sqlserver://localhost:1433;database=CapstoneDatabase;encrypt=false");
+	//	datasource.setUrl("jdbc:sqlserver://localhost:1433;database=CapstoneDatabase;encrypt=false");
 //		datasource.setUsername("jyj123");
-//		datasource.setUsername("sa");
+	//	datasource.setUsername("sa");
 //		datasource.setPassword("jpoo1234");
-///		datasource.setPassword("hhy960918");
+	//	datasource.setPassword("hhy960918");
 		return datasource;
 	}
 

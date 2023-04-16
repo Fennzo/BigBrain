@@ -83,6 +83,9 @@
             </div>
             <div class="layui-form-item">
                 <div class="layui-input-block">
+                    <div class="error-msg" th:if="${errorMessage}">
+                        <p th:text="${errorMessage}"></p>
+                    </div>
                     <button class="layui-btn" lay-submit >Register</button>
                 </div>
             </div>

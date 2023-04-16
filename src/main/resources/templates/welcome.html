@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -20,6 +20,31 @@
             padding: 20px;
             box-sizing: border-box;
         }
+
+        .title{
+            text-align: center;
+            color: #fff;
+        }
+        .content{
+            color: #fff;
+            margin-top: 10px;
+        }
+        #card-body{
+            background-color: #22345B;
+            border-color: #22345B;
+            margin-top: 20px;
+        }
+        #card-body .layui-badge{
+            margin-left: 10px;
+        }
+        #card-body .flex-box{
+            display: flex;
+            align-items: center;
+            flex-direction: row;
+            justify-content: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, .5);
+        }
     </style>
 </head>
 <body>
@@ -32,6 +57,12 @@
         <div class="flex-box">
             <span>Welcome: </span><span th:text = "${user.firstName}"></span><br>
             <h1>You're google authenticated</h1>
+        </div>
+        <div class="layui-card-body" id="card-body">
+            <div class="flex-box">
+                <h2 class="title" th:text="${latestAnnouncement.title}">MOVING TO STATE COLLEGE IN FALL, 2023? </h2><span class="layui-badge" th:text="${latestAnnouncement.severity}"></span>
+            </div>
+            <p class="content" th:text="${latestAnnouncement.description}">Check out our sister property, Blue Course Commons!  Click here to take a virtual tour right nowl</p>
         </div>
     </div>
 </div>

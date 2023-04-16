@@ -51,6 +51,9 @@
             </div>
             <div class="layui-form-item">
                 <div class="layui-input-block">
+                    <div class="error-msg" th:if="${errorMessage}">
+                        <p th:text="${errorMessage}"></p>
+                    </div>
                     <button class="layui-btn" lay-submit >Submit payment</button>
                     <a th:if="${session.user.role == 'Manager'}" class="layui-btn" href="/admin/allbills" >Go back</a>
                     <a th:if="${session.user.role != 'Manager'}" class="layui-btn" href="/user/userbills" >Go back</a>

@@ -2,9 +2,9 @@ logging:
   level:
     org:
       springframework:
-        security:
-        web: DEBUG
-        org:hibernate: DEBUG
+        security: DEBUG
+        web:
+        org:hibernate:
 spring:
   security:
     oauth2:
