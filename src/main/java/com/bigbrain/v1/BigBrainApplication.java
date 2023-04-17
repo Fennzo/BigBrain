@@ -11,9 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 public class BigBrainApplication {
-	
 
-	
 	public static void main(String[] args) {
 		SpringApplication.run(BigBrainApplication.class, args);
 	}

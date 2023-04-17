@@ -12,9 +12,7 @@ import com.google.maps.errors.ApiException;
 import com.google.maps.model.GeocodingResult;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
@@ -26,8 +24,6 @@ import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 @Controller
@@ -70,6 +66,11 @@ public class IncidentController {
         if (file != null && file.getContentType().startsWith("image/")) {
             byte[] imageData = file.getBytes();
             newIncident.setImage(imageData);
+        }
+
+        if(!incidentAddress.getZipCode().matches("\\d{5}")){
+            model.addAttribute("errorMessage", "Zipcode must be 5 digits only");
+            return "incidentform";
         }
         String address = incidentAddress.getAddressLine1() + " " + incidentAddress.getCity() + ", " + incidentAddress.getCity() + " " + incidentAddress.getZipCode();
 

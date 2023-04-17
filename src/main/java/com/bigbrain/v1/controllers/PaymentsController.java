@@ -1,7 +1,6 @@
 package com.bigbrain.v1.controllers;
 
 import com.bigbrain.v1.DAOandRepositories.PaymentRepository;
-import com.bigbrain.v1.models.Bills;
 import com.bigbrain.v1.models.Payments;
 import com.bigbrain.v1.models.Users;
 import com.bigbrain.v1.services.ParseErrorMessageService;
