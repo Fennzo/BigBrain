@@ -1,10 +1,16 @@
 logging:
   level:
+    root: DEBUG
     org:
       springframework:
-        security: DEBUG
-        web:
+        security:
+        web: debug
         org:hibernate:
+    web: debug
+
+server:
+  forward-headers-strategy: native
+
 spring:
   security:
     oauth2:

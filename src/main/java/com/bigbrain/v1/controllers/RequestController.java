@@ -7,6 +7,7 @@ import com.bigbrain.v1.models.Requests;
 import com.bigbrain.v1.models.Users;
 import com.bigbrain.v1.DAOandRepositories.AddressRepository;
 import com.bigbrain.v1.DAOandRepositories.RequestRepository;
+import com.bigbrain.v1.services.ParseErrorMessageService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,10 +24,12 @@ public class RequestController {
     private RequestRepository requestRepository;
     private AddressRepository addressRepository;
     private MaintenanceRepository maintenanceRepository;
+    private ParseErrorMessageService parseErrorMessageService;
 
     @Autowired
-    public RequestController(RequestRepository requestRepository, AddressRepository addressRepository, MaintenanceRepository maintenanceRepository) {
+    public RequestController(RequestRepository requestRepository, AddressRepository addressRepository, MaintenanceRepository maintenanceRepository, ParseErrorMessageService parseErrorMessageService) {
         this.requestRepository = requestRepository;
+        this.parseErrorMessageService = parseErrorMessageService;
         this.addressRepository = addressRepository;
         this.maintenanceRepository = maintenanceRepository;
     }
@@ -41,7 +44,7 @@ public class RequestController {
     }
 
     @PostMapping("/user/requestform")
-    public String submitRequestForm(@ModelAttribute("newRequest") Requests newRequest, HttpSession httpSession, Model model) {
+    public String submitRequestForm(@ModelAttribute("newRequest") Requests newRequest, Model model) {
 
         Addresses address = addressRepository.findByUserID(newRequest.getRequestUserIDFK());
         newRequest.setAddressIDFK(address.getAddressIDPK());
@@ -55,23 +58,9 @@ public class RequestController {
         // System.out.println("NEW REQUESTS: " + newRequest.toString());
         try {
             requestRepository.save(newRequest);
-            return "redirect:/welcome" ;
+            return "redirect:/user/userrequests";
         } catch (Exception e) {
-            String errorMessage = e.getMessage();
-            String parsedMessage;
-            System.out.println("EXCEPTION ERROR " + errorMessage);
-            if (errorMessage.contains("constraint")) {
-                Pattern pattern = Pattern.compile("column\\s'(\\w+)'\\.");
-                Matcher matcher = pattern.matcher(errorMessage);
-                matcher.find();
-                parsedMessage = matcher.group(1) + " is invalid" ;
-            } else {
-                Pattern pattern = Pattern.compile("(?<=error code \\[50000];\\s)([^;]*$)");
-                Matcher matcher = pattern.matcher(errorMessage);
-                matcher.find();
-                parsedMessage = matcher.group(1);
-
-            }
+            String parsedMessage = parseErrorMessageService.parseErrorMessage(e.getMessage());
             model.addAttribute("errorMessage", parsedMessage);
             return "submitrequestform" ;
         }
@@ -118,7 +107,7 @@ public class RequestController {
         return "requestupdateform" ;
     }
 
-    @PostMapping("/admin/updaterequest")
+    @PostMapping("/updaterequest")
     public String submitUpdateRequest(@ModelAttribute("requestToUpdate") Requests requestToUpdate, HttpSession httpSession, Model model) {
         Users user = (Users) httpSession.getAttribute("user");
         requestRepository.update(requestToUpdate, requestToUpdate.getRequestIDPK());
